@@ -6,6 +6,7 @@ gem 'pg'
 
 # Sinatra driver
 gem 'sinatra'
+gem 'debugger'
 
 # Use Thin for our web server
 gem 'thin'
@@ -19,6 +20,9 @@ gem 'shotgun'
 
 gem 'oauth'
 gem 'twitter'
+
+gem 'redis'
+gem 'sidekiq'
 
 group :test do
   gem 'faker'

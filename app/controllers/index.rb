@@ -12,6 +12,13 @@ get '/sign_out' do
   redirect '/'
 end
 
+post '/tweets' do 
+  user = User.find(session[:user_id])
+  tweet = Tweet.create(:user_id => user.id, :text => params[:tweet])
+  job = user.tweet(tweet.text)
+  job.to_s
+end
+
 get '/auth' do
   # the `request_token` method is defined in `app/helpers/oauth.rb`
   @access_token = request_token.get_access_token(:oauth_verifier => params[:oauth_verifier])
@@ -23,11 +30,14 @@ get '/auth' do
                   oauth_secret: @access_token.secret }
 
   user = User.create(user_params)
-
-  puts user.inspect
-
-  # at this point in the code is where you'll need to create your user account and store the access token
+  session[:user_id] = user.id
 
   erb :index
   
+end
+
+get '/status/:job_id' do
+  puts "got a status update request"
+  jid = params[:job_id]
+  job_is_complete(jid) ? "Yep!" : "Nope!"
 end

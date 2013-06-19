@@ -1,7 +1,30 @@
 $(document).ready(function() {
-  // This is called after the document has loaded in its entirety
-  // This guarantees that any elements we bind to will exist on the page
-  // when we try to bind to them
+  var pollFreq = 1000;
 
-  // See: http://docs.jquery.com/Tutorials:Introducing_$(document).ready()
+  $('.post_tweets').on('submit', function(e){
+    console.log('here');
+    e.preventDefault();
+    $.ajax({
+      method: 'post',
+      url: '/tweets',
+      data: $(this).serialize()
+    }).done(function(response){
+      console.log(response);
+      setTimeout(getJobStatus(response),pollFreq);
+    });
+  });
+
+  function getJobStatus(jobId){
+    $.ajax({
+      method: 'get',
+      url: '/status/' + jobId + ''
+    }).done(function(response){
+      $('.job_results').append(response);
+      console.log(response);
+      if(response === "Nope!")
+      {
+        setTimeout(getJobStatus(jobId), pollFreq);
+      }
+    });
+  }
 });
